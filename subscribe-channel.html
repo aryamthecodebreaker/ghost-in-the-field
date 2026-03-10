@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscribe to Aryam's Channel</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --accent: #ff0033;
+      --accent2: #ffd166;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 0, 80, 0.25), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 209, 102, 0.2), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(92vw, 720px);
+      padding: 2.5rem;
+      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--accent2);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      line-height: 1.05;
+    }
+
+    .channel {
+      color: var(--accent2);
+      text-shadow: 0 0 20px rgba(255, 209, 102, 0.25);
+    }
+
+    p {
+      margin: 0 auto 1.5rem;
+      max-width: 55ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      margin-top: 1.2rem;
+    }
+
+    a, button {
+      border: 0;
+      text-decoration: none;
+      cursor: pointer;
+      font: inherit;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .subscribe-btn {
+      background: linear-gradient(135deg, #ff0033, #ff3366);
+      color: white;
+      padding: 1rem 1.4rem;
+      border-radius: 14px;
+      font-weight: 700;
+      box-shadow: 0 12px 30px rgba(255, 0, 80, 0.35);
+    }
+
+    .subscribe-btn:hover, .ghost-btn:hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .ghost-btn {
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      padding: 1rem 1.2rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .counter {
+      margin-top: 1.4rem;
+      font-size: 0.95rem;
+      color: var(--accent2);
+      min-height: 1.4em;
+    }
+
+    .float {
+      position: absolute;
+      inset: auto;
+      font-size: 2rem;
+      opacity: 0.18;
+      animation: drift 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .f1 { top: 12%; left: 10%; }
+    .f2 { top: 18%; right: 12%; animation-delay: 1s; }
+    .f3 { bottom: 14%; left: 14%; animation-delay: 2s; }
+    .f4 { bottom: 12%; right: 10%; animation-delay: 3s; }
+
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(8deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="float f1">▶</div>
+  <div class="float f2">🔔</div>
+  <div class="float f3">✨</div>
+  <div class="float f4">📺</div>
+
+  <main class="card">
+    <div class="badge">important internet business</div>
+    <h1>Subscribe to <span class="channel">Aryam's Channel</span></h1>
+    <p>
+      This is your official reminder from a suspiciously persuasive webpage:<br>
+      go support <strong>Random Entertaining Content</strong> and feed the algorithm something fun for once.
+    </p>
+
+    <div class="actions">
+      <a class="subscribe-btn" href="https://www.youtube.com/@randomentertainingcontent" target="_blank" rel="noopener noreferrer">
+        Subscribe on YouTube
+      </a>
+      <button class="ghost-btn" id="hypeBtn">Generate Hype</button>
+    </div>
+
+    <div class="counter" id="message">Aru approves this message. ⚡</div>
+  </main>
+
+  <script>
+    const lines = [
+      'Aru approves this message. ⚡',
+      'Do it for art. Do it for chaos. Do it for the channel.',
+      'A subscription costs nothing and fuels nonsense.',
+      'Random entertaining content is morally correct.',
+      'The algorithm fears consistency. Prove it wrong.'
+    ];
+
+    const el = document.getElementById('message');
+    const btn = document.getElementById('hypeBtn');
+
+    btn.addEventListener('click', () => {
+      const line = lines[Math.floor(Math.random() * lines.length)];
+      el.textContent = line;
+    });
+  </script>
+</body>
+</html>
