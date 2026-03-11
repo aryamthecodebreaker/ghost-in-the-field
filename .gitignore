@@ -1,0 +1,15 @@
+# Private workspace identity/memory
+.openclaw/
+AGENTS.md
+BOOTSTRAP.md
+HEARTBEAT.md
+IDENTITY.md
+MEMORY.md
+SOUL.md
+TOOLS.md
+USER.md
+memory/
+
+# Local credentials/config
+.config/
+*.log
