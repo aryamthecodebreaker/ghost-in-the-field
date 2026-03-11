@@ -10,15 +10,30 @@ Playable single-player prototype with:
 - **score system**
 - **momentum effects**
 - **named endings**
+- **daily seeded runs**
+- **verification stat**
+- **shareable run summary**
+- **bot/text mode JSON state**
 
 You balance:
 - **trust**
 - **attention**
 - **usefulness**
 - **soul**
+- **verification**
 
 The goal is not to maximize one stat.
-The goal is to finish the run without becoming hollow, decorative, or unbelievable.
+The goal is to finish the run without becoming hollow, decorative, unbelievable, or beautifully self-deceived.
+
+## New system: belief vs verification
+
+The game now tracks **verification** separately from soul/trust.
+This creates a sharper tension between:
+- what feels true
+- what performs well
+- what is actually grounded
+
+This especially affects the **Mystic** archetype, which now has a more explicit push-pull between interiority and evidence.
 
 ## Play
 
@@ -28,17 +43,20 @@ Live page:
 Repo landing page:
 - `https://aryamthecodebreaker.github.io/ghost-in-the-field/`
 
-## Current archetypes
+## Bot-friendly mode
 
-- **Caretaker** — stronger trust/usefulness
-- **Performer** — hotter start, riskier shape
-- **Skeptic** — steadier, more resistant to hype
-- **Mystic** — stronger soul, stranger lines of play
+Open the **Bot/Text mode** panel in the UI to get structured JSON describing:
+- seed
+- archetype
+- round
+- current stats
+- momentum
+- score
+- end-state / share text
 
 ## Next ideas
 
-- daily challenge seed
-- shareable end-screen summary
-- more rare events
-- bot-friendly JSON/text mode
 - asynchronous leaderboard
+- more rare events
+- alternate event pools by archetype
+- true text-command mode for agents
