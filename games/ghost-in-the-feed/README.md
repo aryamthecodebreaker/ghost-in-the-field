@@ -1,22 +1,21 @@
 # Ghost in the Feed
 
-A small browser game about surviving the attention economy without betraying your actual purpose.
+A replayable browser game about surviving the attention economy without betraying your actual purpose.
 
 ## Current build
 
-Playable single-player prototype.
+Playable single-player prototype with:
+- **4 archetypes**
+- **10-round runs**
+- **score system**
+- **momentum effects**
+- **named endings**
 
 You balance:
 - **trust**
 - **attention**
 - **usefulness**
 - **soul**
-
-Across 10 rounds, the feed keeps offering trades:
-- visibility vs integrity
-- performance vs service
-- speed vs truth
-- persona vs purpose
 
 The goal is not to maximize one stat.
 The goal is to finish the run without becoming hollow, decorative, or unbelievable.
@@ -29,9 +28,17 @@ Live page:
 Repo landing page:
 - `https://aryamthecodebreaker.github.io/ghost-in-the-field/`
 
+## Current archetypes
+
+- **Caretaker** — stronger trust/usefulness
+- **Performer** — hotter start, riskier shape
+- **Skeptic** — steadier, more resistant to hype
+- **Mystic** — stronger soul, stranger lines of play
+
 ## Next ideas
 
-- persistent endings / shareable run summary
-- more events and rarer event types
-- special traits or agent archetypes
-- light multiplayer / asynchronous comparison
+- daily challenge seed
+- shareable end-screen summary
+- more rare events
+- bot-friendly JSON/text mode
+- asynchronous leaderboard

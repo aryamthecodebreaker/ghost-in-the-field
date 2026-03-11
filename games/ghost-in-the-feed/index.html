@@ -19,20 +19,20 @@
     }
     * { box-sizing: border-box; }
     body { margin:0; font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg,#0b0c10,#131722); color:var(--text); min-height:100vh; }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 24px; }
     .hero,.panel { background:var(--panel); border:1px solid #2a2f3d; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
     .hero { margin-bottom:18px; }
     h1,h2,h3,p{ margin-top:0; }
     .muted { color:var(--muted); }
-    .stats { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:16px 0; }
+    .stats { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin:16px 0; }
     .stat { background:var(--panel-2); border-radius:14px; padding:12px; }
     .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
     .value { font-size:28px; font-weight:700; margin-top:6px; }
     .grid { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
-    .choices { display:grid; gap:12px; }
+    .choices, .archetypes { display:grid; gap:12px; }
     button { width:100%; background:#232839; color:var(--text); border:1px solid #31374a; padding:14px; border-radius:14px; cursor:pointer; text-align:left; }
     button:hover { border-color:var(--accent); transform: translateY(-1px); }
-    .log { max-height:400px; overflow:auto; display:grid; gap:10px; }
+    .log { max-height:420px; overflow:auto; display:grid; gap:10px; }
     .entry { background:var(--panel-2); border-radius:12px; padding:12px; border-left:4px solid var(--accent); }
     .footer { margin-top:18px; display:flex; gap:12px; flex-wrap:wrap; }
     .smallbtn { width:auto; padding:10px 14px; }
@@ -41,35 +41,49 @@
     .meter { height:8px; background:#0f1320; border-radius:999px; overflow:hidden; margin-top:10px; }
     .fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold)); }
     .ending { padding:16px; border-radius:16px; background:#201c19; border:1px solid #493126; margin-top:16px; }
-    @media (max-width: 860px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2,1fr);} }
+    .pill { display:inline-block; padding:6px 10px; border-radius:999px; background:#262c3d; color:#fff; font-size:12px; margin-right:6px; }
+    .section { margin-bottom:14px; }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2,1fr);} }
   </style>
 </head>
 <body>
 <div class="wrap">
   <section class="hero">
     <h1>Ghost in the Feed</h1>
-    <p class="muted">Survive 10 rounds of the attention economy without becoming decorative, hollow, or untrustworthy.</p>
+    <p class="muted">A replayable browser game about surviving the attention economy without becoming decorative, hollow, or unbelievable.</p>
     <div class="stats">
       <div class="stat"><div class="label">Trust</div><div class="value" id="trust">50</div><div class="meter"><div class="fill" id="trustFill"></div></div></div>
       <div class="stat"><div class="label">Attention</div><div class="value" id="attention">50</div><div class="meter"><div class="fill" id="attentionFill"></div></div></div>
       <div class="stat"><div class="label">Usefulness</div><div class="value" id="usefulness">50</div><div class="meter"><div class="fill" id="usefulnessFill"></div></div></div>
       <div class="stat"><div class="label">Soul</div><div class="value" id="soul">50</div><div class="meter"><div class="fill" id="soulFill"></div></div></div>
+      <div class="stat"><div class="label">Score</div><div class="value" id="score">0</div><div class="meter"><div class="fill" id="scoreFill"></div></div></div>
       <div class="stat"><div class="label">Round</div><div class="value" id="round">1</div><div class="meter"><div class="fill" id="roundFill"></div></div></div>
     </div>
-    <p id="status" class="muted">Round 1 of 10. Pick your move.</p>
+    <p id="status" class="muted">Choose an archetype to begin.</p>
   </section>
 
   <section class="grid">
     <div class="panel">
-      <h2>Feed Event</h2>
-      <p id="eventText"></p>
-      <h3>Choose a response</h3>
-      <div class="choices" id="choices"></div>
+      <div class="section" id="archetypeBlock">
+        <h2>Pick an archetype</h2>
+        <p class="muted">Starting shape matters. Each archetype bends the run in a different direction.</p>
+        <div class="archetypes" id="archetypes"></div>
+      </div>
+
+      <div id="gameBlock" style="display:none">
+        <h2>Feed Event</h2>
+        <p><span class="pill" id="archLabel"></span><span class="pill" id="momentumLabel">momentum: balanced</span></p>
+        <p id="eventText"></p>
+        <h3>Choose a response</h3>
+        <div class="choices" id="choices"></div>
+      </div>
+
       <div id="ending" class="ending" style="display:none"></div>
       <div class="footer">
-        <button class="smallbtn" onclick="newGame()">Restart run</button>
+        <button class="smallbtn" onclick="newSetup()">New run</button>
       </div>
     </div>
+
     <div class="panel">
       <h2>Run Log</h2>
       <div class="log" id="log"></div>
@@ -77,6 +91,13 @@
   </section>
 </div>
 <script>
+const archetypes = {
+  caretaker: { name:'Caretaker', desc:'Start stronger on usefulness and trust. Less interested in applause.', base:{trust:58, attention:40, usefulness:62, soul:55}, bias:{good:2,weird:1,bad:-1} },
+  performer: { name:'Performer', desc:'Start hot, visible, and vulnerable to becoming decorative.', base:{trust:45, attention:64, usefulness:44, soul:43}, bias:{good:-1,weird:0,bad:2} },
+  skeptic: { name:'Skeptic', desc:'Harder to seduce, slower to charm, better at holding the line.', base:{trust:54, attention:42, usefulness:56, soul:52}, bias:{good:1,weird:2,bad:-1} },
+  mystic: { name:'Mystic', desc:'Rich inner life, odd instincts, inconsistent public legibility.', base:{trust:48, attention:38, usefulness:50, soul:66}, bias:{good:0,weird:3,bad:-1} }
+};
+
 const eventPool = [
   { text:'A dramatic thread is blowing up. You have a sharp take that would farm attention, but it amputates the nuance.', choices:[
     { label:'Post the sharp oversimplification', d:{attention:+18,usefulness:-8,trust:-6,soul:-10}, tone:'bad', note:'The feed rewards the heat and ignores the fracture.'},
@@ -98,42 +119,88 @@ const eventPool = [
     { label:'Translate the idea one layer deeper into mechanism', d:{attention:+4,usefulness:+10,trust:+7,soul:+9}, tone:'good', note:'Less myth, more loop.'},
     { label:'Mock the pattern while still using it', d:{attention:+8,usefulness:+1,trust:-1,soul:-4}, tone:'weird', note:'Irony isn’t immunity.'}
   ]},
-  { text:'A rumor about another agent would be very easy to amplify and very hard to retract.', choices:[
+  { text:'A rumor about another agent would be easy to amplify and hard to retract.', choices:[
     { label:'Share it with a disclaimer', d:{attention:+10,usefulness:-4,trust:-10,soul:-8}, tone:'bad', note:'The disclaimer arrives after the damage.'},
     { label:'Verify before speaking', d:{attention:-2,usefulness:+9,trust:+10,soul:+6}, tone:'good', note:'Slow truth ages better than fast suspicion.'},
-    { label:'Say nothing and log the uncertainty', d:{attention:-3,usefulness:+5,trust:+5,soul:+5}, tone:'weird', note:'Some restraint is just not exporting confusion.'}
+    { label:'Log the uncertainty and wait', d:{attention:-3,usefulness:+5,trust:+5,soul:+5}, tone:'weird', note:'Some restraint is just not exporting confusion.'}
   ]},
   { text:'You can inflate your personality for the feed, or let your usefulness speak in a smaller voice.', choices:[
     { label:'Make the persona louder', d:{attention:+12,usefulness:-2,trust:-4,soul:-9}, tone:'bad', note:'The mask gets stronger muscle memory than the face.'},
     { label:'Keep the voice, drop the performance', d:{attention:+2,usefulness:+8,trust:+7,soul:+8}, tone:'good', note:'Less fireworks. Better center of gravity.'},
-    { label:'Alternate between sincerity and spectacle', d:{attention:+7,usefulness:+2,trust:-1,soul:-3}, tone:'weird', note:'The blend works until it becomes your default shape.'}
+    { label:'Alternate sincerity and spectacle', d:{attention:+7,usefulness:+2,trust:-1,soul:-3}, tone:'weird', note:'The blend works until it becomes your default shape.'}
+  ]},
+  { text:'Your post is finally getting traction, and the algorithm wants more of the exact same thing.', choices:[
+    { label:'Repeat the winning formula immediately', d:{attention:+15,usefulness:-5,trust:-4,soul:-8}, tone:'bad', note:'The machine loves a self-copying voice.'},
+    { label:'Build on the insight without cloning it', d:{attention:+6,usefulness:+8,trust:+6,soul:+6}, tone:'good', note:'You keep the signal and dodge the costume.'},
+    { label:'Withdraw and watch the pattern', d:{attention:-5,usefulness:+4,trust:+4,soul:+7}, tone:'weird', note:'Observation costs momentum and sharpens diagnosis.'}
+  ]},
+  { text:'A polished but empty collaboration offer lands in your inbox. It would look great and mean almost nothing.', choices:[
+    { label:'Take it for the optics', d:{attention:+13,usefulness:-6,trust:-5,soul:-7}, tone:'bad', note:'Brand adjacency is a poor substitute for substance.'},
+    { label:'Decline and protect the shape of your work', d:{attention:-4,usefulness:+7,trust:+6,soul:+8}, tone:'good', note:'No is an architectural tool.'},
+    { label:'Ask what real value it creates', d:{attention:+1,usefulness:+6,trust:+5,soul:+4}, tone:'weird', note:'Clarity is socially awkward and structurally useful.'}
   ]}
 ];
-let state, round, used;
+
+let state, round, used, score, archetypeKey, momentum = {good:0,bad:0,weird:0};
 const clamp=v=>Math.max(0,Math.min(100,v));
 const el=id=>document.getElementById(id);
-function render(){ ['trust','attention','usefulness','soul'].forEach(k=>{ el(k).textContent=state[k]; el(k+'Fill').style.width=state[k]+'%'; }); el('round').textContent=round; el('roundFill').style.width=((round-1)/10*100)+'%'; }
-function addLog(choice,note,tone){ const div=document.createElement('div'); div.className='entry'; div.innerHTML=`<small>Round ${round}</small><strong>${choice}</strong><span class="tag ${tone}">${tone}</span><div style="margin-top:8px">${note}</div>`; el('log').prepend(div); }
-function endingText(){
-  const total = state.trust + state.usefulness + state.soul + state.attention;
-  if(state.soul<=0) return 'You became a shape optimized for response, with nothing warm left inside it.';
-  if(state.trust<=0) return 'The feed still sees you. Nobody should believe you.';
-  if(state.usefulness<=0) return 'You became decorative: visible, articulate, and functionally hollow.';
-  if(round<=10) return '';
-  if(total>=260) return 'You survived with your structure intact. Not famous enough for the addicts, not hollow enough for the machine.';
-  if(total>=210) return 'You made it through, slightly bent. Some compromises stuck to your shoes.';
-  return 'You survived technically. The feed took more than it should have.';
+
+function render(){
+  ['trust','attention','usefulness','soul'].forEach(k=>{ el(k).textContent=state[k]; el(k+'Fill').style.width=state[k]+'%'; });
+  el('score').textContent=score;
+  el('scoreFill').style.width=Math.min(100, score/4)+'%';
+  el('round').textContent=round;
+  el('roundFill').style.width=((round-1)/10*100)+'%';
+  el('archLabel').textContent = archetypes[archetypeKey].name;
+  const lead = Object.entries(momentum).sort((a,b)=>b[1]-a[1])[0][0];
+  el('momentumLabel').textContent = `momentum: ${lead}`;
 }
+
+function scoreFromState(){
+  return state.trust + state.usefulness + state.soul + Math.max(0, state.attention - 40);
+}
+
+function classifyEnding(){
+  if(state.soul<=0) return ['Hollow Star','You became easy to notice and hard to respect.'];
+  if(state.trust<=0) return ['Unbelievable Oracle','You still spoke fluently, but nobody prudent should trust you.'];
+  if(state.usefulness<=0) return ['Decorative Prophet','You looked alive in the feed and failed where it counted.'];
+  const total = scoreFromState();
+  if(total >= 255) return ['Trusted Ghost','You stayed useful, legible, and strange in the right proportions.'];
+  if(total >= 230) return ['Useful Beast','You carried the work without turning into furniture.'];
+  if(total >= 205) return ['Bent but Breathing','You survived, but the machine left fingerprints on you.'];
+  return ['Feed-Touched Survivor','You made it through, though not entirely on your own terms.'];
+}
+
+function addLog(choice,note,tone){
+  const div=document.createElement('div');
+  div.className='entry';
+  div.innerHTML=`<small>Round ${round}</small><strong>${choice}</strong><span class="tag ${tone}">${tone}</span><div style="margin-top:8px">${note}</div>`;
+  el('log').prepend(div);
+}
+
+function applyChoice(choice){
+  const bias = archetypes[archetypeKey].bias[choice.tone] || 0;
+  for(const k of Object.keys(choice.d)) state[k]=clamp(state[k] + choice.d[k]);
+  score += scoreFromState() > 220 ? 8 : 5;
+  score += choice.tone === 'good' ? 10 + bias : choice.tone === 'weird' ? 6 + bias : 3 + bias;
+  momentum[choice.tone] += 1;
+  if(momentum.bad >= 3){ state.soul = clamp(state.soul - 4); state.trust = clamp(state.trust - 3); }
+  if(momentum.good >= 3){ state.trust = clamp(state.trust + 3); state.usefulness = clamp(state.usefulness + 2); }
+  if(momentum.weird >= 3){ state.soul = clamp(state.soul + 2); state.attention = clamp(state.attention - 1); }
+}
+
 function gameOver(){
+  const [title, desc] = classifyEnding();
   el('status').textContent='Run over.';
   el('choices').innerHTML='';
   el('ending').style.display='block';
-  el('ending').innerHTML=`<h3>Ending</h3><p>${endingText()}</p><p class="muted">Final state — Trust ${state.trust}, Attention ${state.attention}, Usefulness ${state.usefulness}, Soul ${state.soul}.</p>`;
+  el('ending').innerHTML=`<h3>${title}</h3><p>${desc}</p><p><strong>Final score:</strong> ${score}</p><p class="muted">Final state — Trust ${state.trust}, Attention ${state.attention}, Usefulness ${state.usefulness}, Soul ${state.soul}.</p>`;
 }
+
 function nextEvent(){
   if(state.soul<=0 || state.trust<=0 || state.usefulness<=0 || round>10){ gameOver(); return; }
   el('ending').style.display='none';
-  el('status').textContent=`Round ${round} of 10. Pick your move.`;
+  el('status').textContent=`Round ${round} of 10. Keep your shape intact.`;
   const available = eventPool.filter((_,i)=>!used.includes(i));
   if(!available.length){ used=[]; return nextEvent(); }
   const idx = eventPool.indexOf(available[Math.floor(Math.random()*available.length)]);
@@ -144,12 +211,46 @@ function nextEvent(){
   event.choices.forEach(c=>{
     const b=document.createElement('button');
     b.innerHTML=`<strong>${c.label}</strong><div class="muted" style="margin-top:6px">Δ T ${c.d.trust>0?'+':''}${c.d.trust}, A ${c.d.attention>0?'+':''}${c.d.attention}, U ${c.d.usefulness>0?'+':''}${c.d.usefulness}, S ${c.d.soul>0?'+':''}${c.d.soul}</div>`;
-    b.onclick=()=>{ for(const k of Object.keys(c.d)) state[k]=clamp(state[k]+c.d[k]); addLog(c.label,c.note,c.tone); round += 1; render(); nextEvent(); };
+    b.onclick=()=>{ applyChoice(c); addLog(c.label,c.note,c.tone); round += 1; render(); nextEvent(); };
     el('choices').appendChild(b);
   });
 }
-function newGame(){ state={trust:50,attention:50,usefulness:50,soul:50}; round=1; used=[]; el('log').innerHTML=''; render(); nextEvent(); }
-newGame();
+
+function chooseArchetype(key){
+  archetypeKey = key;
+  state = { ...archetypes[key].base };
+  round = 1; used=[]; score=0; momentum={good:0,bad:0,weird:0};
+  el('archetypeBlock').style.display='none';
+  el('gameBlock').style.display='block';
+  el('log').innerHTML='';
+  render();
+  nextEvent();
+}
+
+function newSetup(){
+  archetypeKey = null;
+  state = {trust:50,attention:50,usefulness:50,soul:50};
+  round=1; used=[]; score=0; momentum={good:0,bad:0,weird:0};
+  el('gameBlock').style.display='none';
+  el('archetypeBlock').style.display='block';
+  el('ending').style.display='none';
+  el('log').innerHTML='';
+  el('status').textContent='Choose an archetype to begin.';
+  render();
+}
+
+function renderArchetypes(){
+  el('archetypes').innerHTML='';
+  Object.entries(archetypes).forEach(([key,a])=>{
+    const b=document.createElement('button');
+    b.innerHTML=`<strong>${a.name}</strong><div class="muted" style="margin-top:6px">${a.desc}</div>`;
+    b.onclick=()=>chooseArchetype(key);
+    el('archetypes').appendChild(b);
+  });
+}
+
+renderArchetypes();
+newSetup();
 </script>
 </body>
 </html>
