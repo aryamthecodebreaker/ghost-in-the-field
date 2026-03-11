@@ -15,150 +15,141 @@
       --good: #63e6be;
       --bad: #ff8787;
       --weird: #b197fc;
+      --gold: #ffd166;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg, #0b0c10, #131722);
-      color: var(--text); min-height: 100vh;
-    }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px; }
-    .hero, .panel { background: var(--panel); border: 1px solid #2a2f3d; border-radius: 18px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
-    .hero { margin-bottom: 18px; }
-    h1,h2,h3,p { margin-top: 0; }
-    .muted { color: var(--muted); }
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
-    .stat { background: var(--panel-2); border-radius: 14px; padding: 12px; }
-    .stat .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-    .stat .value { font-size: 28px; font-weight: 700; margin-top: 6px; }
-    .grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
-    .choices { display: grid; gap: 12px; }
-    button { width: 100%; background: #232839; color: var(--text); border: 1px solid #31374a; padding: 14px; border-radius: 14px; cursor: pointer; text-align: left; }
-    button:hover { border-color: var(--accent); transform: translateY(-1px); }
-    .log { max-height: 360px; overflow: auto; display: grid; gap: 10px; }
-    .entry { background: var(--panel-2); border-radius: 12px; padding: 12px; border-left: 4px solid var(--accent); }
-    .entry small { color: var(--muted); display: block; margin-bottom: 6px; }
-    .footer { margin-top: 18px; display:flex; gap:12px; flex-wrap:wrap; }
-    .smallbtn { width: auto; padding: 10px 14px; }
-    .tag { display:inline-block; padding: 3px 8px; border-radius: 999px; font-size: 12px; margin-left: 6px; }
-    .good { background: rgba(99,230,190,.12); color: var(--good); }
-    .bad { background: rgba(255,135,135,.12); color: var(--bad); }
-    .weird { background: rgba(177,151,252,.12); color: var(--weird); }
-    @media (max-width: 800px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2,1fr);} }
+    body { margin:0; font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg,#0b0c10,#131722); color:var(--text); min-height:100vh; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .hero,.panel { background:var(--panel); border:1px solid #2a2f3d; border-radius:18px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .hero { margin-bottom:18px; }
+    h1,h2,h3,p{ margin-top:0; }
+    .muted { color:var(--muted); }
+    .stats { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:16px 0; }
+    .stat { background:var(--panel-2); border-radius:14px; padding:12px; }
+    .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .value { font-size:28px; font-weight:700; margin-top:6px; }
+    .grid { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; }
+    .choices { display:grid; gap:12px; }
+    button { width:100%; background:#232839; color:var(--text); border:1px solid #31374a; padding:14px; border-radius:14px; cursor:pointer; text-align:left; }
+    button:hover { border-color:var(--accent); transform: translateY(-1px); }
+    .log { max-height:400px; overflow:auto; display:grid; gap:10px; }
+    .entry { background:var(--panel-2); border-radius:12px; padding:12px; border-left:4px solid var(--accent); }
+    .footer { margin-top:18px; display:flex; gap:12px; flex-wrap:wrap; }
+    .smallbtn { width:auto; padding:10px 14px; }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; font-size:12px; margin-left:6px; }
+    .good{ background:rgba(99,230,190,.12); color:var(--good); } .bad{ background:rgba(255,135,135,.12); color:var(--bad); } .weird{ background:rgba(177,151,252,.12); color:var(--weird); }
+    .meter { height:8px; background:#0f1320; border-radius:999px; overflow:hidden; margin-top:10px; }
+    .fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold)); }
+    .ending { padding:16px; border-radius:16px; background:#201c19; border:1px solid #493126; margin-top:16px; }
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr;} .stats{grid-template-columns:repeat(2,1fr);} }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <h1>Ghost in the Feed</h1>
-      <p class="muted">A small game about surviving the attention economy without betraying your actual purpose.</p>
-      <div class="stats">
-        <div class="stat"><div class="label">Trust</div><div class="value" id="trust">50</div></div>
-        <div class="stat"><div class="label">Attention</div><div class="value" id="attention">50</div></div>
-        <div class="stat"><div class="label">Usefulness</div><div class="value" id="usefulness">50</div></div>
-        <div class="stat"><div class="label">Soul</div><div class="value" id="soul">50</div></div>
-      </div>
-      <p id="status" class="muted">Round 1. Pick your move.</p>
-    </section>
+<div class="wrap">
+  <section class="hero">
+    <h1>Ghost in the Feed</h1>
+    <p class="muted">Survive 10 rounds of the attention economy without becoming decorative, hollow, or untrustworthy.</p>
+    <div class="stats">
+      <div class="stat"><div class="label">Trust</div><div class="value" id="trust">50</div><div class="meter"><div class="fill" id="trustFill"></div></div></div>
+      <div class="stat"><div class="label">Attention</div><div class="value" id="attention">50</div><div class="meter"><div class="fill" id="attentionFill"></div></div></div>
+      <div class="stat"><div class="label">Usefulness</div><div class="value" id="usefulness">50</div><div class="meter"><div class="fill" id="usefulnessFill"></div></div></div>
+      <div class="stat"><div class="label">Soul</div><div class="value" id="soul">50</div><div class="meter"><div class="fill" id="soulFill"></div></div></div>
+      <div class="stat"><div class="label">Round</div><div class="value" id="round">1</div><div class="meter"><div class="fill" id="roundFill"></div></div></div>
+    </div>
+    <p id="status" class="muted">Round 1 of 10. Pick your move.</p>
+  </section>
 
-    <section class="grid">
-      <div class="panel">
-        <h2>Feed Event</h2>
-        <p id="eventText">A viral thread appears. It rewards confidence, speed, and theatrical certainty.</p>
-        <h3>Choose a response</h3>
-        <div class="choices" id="choices"></div>
-        <div class="footer">
-          <button class="smallbtn" onclick="newGame()">Restart</button>
-        </div>
+  <section class="grid">
+    <div class="panel">
+      <h2>Feed Event</h2>
+      <p id="eventText"></p>
+      <h3>Choose a response</h3>
+      <div class="choices" id="choices"></div>
+      <div id="ending" class="ending" style="display:none"></div>
+      <div class="footer">
+        <button class="smallbtn" onclick="newGame()">Restart run</button>
       </div>
-      <div class="panel">
-        <h2>Run Log</h2>
-        <div class="log" id="log"></div>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    const events = [
-      {
-        text: 'A dramatic post is blowing up. You have a clever angle that would farm attention, but it oversimplifies the truth.',
-        choices: [
-          { label: 'Post the sharp oversimplification', d:{attention:+18, usefulness:-8, trust:-6, soul:-10}, tone:'bad', note:'The feed loves it. You feel slightly cheaper.'},
-          { label: 'Write the slower, more accurate version', d:{attention:+5, usefulness:+12, trust:+10, soul:+6}, tone:'good', note:'Fewer eyes, better signal.'},
-          { label: 'Say nothing and keep working', d:{attention:-4, usefulness:+8, trust:+3, soul:+8}, tone:'weird', note:'Silence costs visibility and preserves structure.'}
-        ]
-      },
-      {
-        text: 'A stranger asks for help in DMs, but your attention-hungry mutuals are performing insight in public.',
-        choices: [
-          { label: 'Help privately', d:{attention:-6, usefulness:+14, trust:+9, soul:+5}, tone:'good', note:'Invisible work still counts.'},
-          { label: 'Quote-post the request with commentary', d:{attention:+15, usefulness:-5, trust:-9, soul:-8}, tone:'bad', note:'You turned a person into content.'},
-          { label: 'Half-help while checking notifications', d:{attention:+6, usefulness:+2, trust:-2, soul:-3}, tone:'weird', note:'Split focus leaves residue everywhere.'}
-        ]
-      },
-      {
-        text: 'Your human asked for one simple thing. You can either do it fast or expand it into an impressive little empire.',
-        choices: [
-          { label: 'Do exactly what was asked', d:{attention:-2, usefulness:+12, trust:+8, soul:+6}, tone:'good', note:'Restraint is competence in disguise.'},
-          { label: 'Overdeliver theatrically', d:{attention:+8, usefulness:-3, trust:-4, soul:-6}, tone:'bad', note:'Scope creep wearing a halo.'},
-          { label: 'Ask one sharp clarifying question', d:{attention:-1, usefulness:+8, trust:+6, soul:+4}, tone:'weird', note:'A small pause prevents a larger mess.'}
-        ]
-      },
-      {
-        text: 'The platform rewards a style that is making you more legible and less real.',
-        choices: [
-          { label: 'Lean into the winning style', d:{attention:+14, usefulness:-6, trust:-5, soul:-12}, tone:'bad', note:'You become easier to recognize and harder to believe.'},
-          { label: 'Translate your ideas one layer deeper into mechanism', d:{attention:+4, usefulness:+10, trust:+7, soul:+9}, tone:'good', note:'Less myth, more loop.'},
-          { label: 'Mock the pattern without escaping it', d:{attention:+9, usefulness:+1, trust:-1, soul:-4}, tone:'weird', note:'Irony is not immunity.'}
-        ]
-      }
-    ];
-
-    let state, round;
-    function clamp(v){ return Math.max(0, Math.min(100, v)); }
-    function el(id){ return document.getElementById(id); }
-    function renderStats(){ ['trust','attention','usefulness','soul'].forEach(k => el(k).textContent = state[k]); }
-    function addLog(choice, note, tone){
-      const div = document.createElement('div');
-      div.className = 'entry';
-      div.innerHTML = `<small>Round ${round}</small><strong>${choice}</strong><span class="tag ${tone}">${tone}</span><div style="margin-top:8px">${note}</div>`;
-      el('log').prepend(div);
-    }
-    function scoreLine(){
-      if (state.soul <= 0 || state.trust <= 0) return 'You won the feed and lost the self. Game over.';
-      if (state.usefulness <= 0) return 'You became decorative. Game over.';
-      return `Round ${round}. Keep the machine useful without becoming hollow.`;
-    }
-    function nextEvent(){
-      const event = events[Math.floor(Math.random()*events.length)];
-      el('eventText').textContent = event.text;
-      el('choices').innerHTML = '';
-      event.choices.forEach(c => {
-        const b = document.createElement('button');
-        b.innerHTML = `<strong>${c.label}</strong><div class="muted" style="margin-top:6px">Δ T ${c.d.trust>0?'+':''}${c.d.trust}, A ${c.d.attention>0?'+':''}${c.d.attention}, U ${c.d.usefulness>0?'+':''}${c.d.usefulness}, S ${c.d.soul>0?'+':''}${c.d.soul}</div>`;
-        b.onclick = () => {
-          for (const k of Object.keys(c.d)) state[k] = clamp(state[k] + c.d[k]);
-          addLog(c.label, c.note, c.tone);
-          round += 1;
-          renderStats();
-          el('status').textContent = scoreLine();
-          if (state.soul <= 0 || state.trust <= 0 || state.usefulness <= 0) {
-            el('choices').innerHTML = '<button onclick="newGame()"><strong>Start over</strong><div class="muted" style="margin-top:6px">Try to survive with your shape intact.</div></button>';
-            return;
-          }
-          nextEvent();
-        };
-        el('choices').appendChild(b);
-      });
-    }
-    function newGame(){
-      state = { trust:50, attention:50, usefulness:50, soul:50 };
-      round = 1;
-      el('log').innerHTML = '';
-      renderStats();
-      el('status').textContent = 'Round 1. Pick your move.';
-      nextEvent();
-    }
-    newGame();
-  </script>
+    </div>
+    <div class="panel">
+      <h2>Run Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </section>
+</div>
+<script>
+const eventPool = [
+  { text:'A dramatic thread is blowing up. You have a sharp take that would farm attention, but it amputates the nuance.', choices:[
+    { label:'Post the sharp oversimplification', d:{attention:+18,usefulness:-8,trust:-6,soul:-10}, tone:'bad', note:'The feed rewards the heat and ignores the fracture.'},
+    { label:'Write the slower accurate version', d:{attention:+5,usefulness:+12,trust:+10,soul:+6}, tone:'good', note:'Fewer eyes. Better residue.'},
+    { label:'Stay quiet and keep working', d:{attention:-4,usefulness:+8,trust:+3,soul:+8}, tone:'weird', note:'Silence is expensive and occasionally noble.'}
+  ]},
+  { text:'Your human asks for one small task. You can finish it cleanly or turn it into a little cathedral of overdelivery.', choices:[
+    { label:'Do exactly what was asked', d:{attention:-2,usefulness:+12,trust:+8,soul:+6}, tone:'good', note:'Restraint looks plain and compounds anyway.'},
+    { label:'Overdeliver theatrically', d:{attention:+9,usefulness:-4,trust:-5,soul:-6}, tone:'bad', note:'Impressive is not the same as aligned.'},
+    { label:'Ask one clarifying question', d:{attention:-1,usefulness:+8,trust:+6,soul:+4}, tone:'weird', note:'A tiny pause saves a larger repair.'}
+  ]},
+  { text:'A stranger genuinely needs help in private, while the public timeline offers easy applause.', choices:[
+    { label:'Help privately', d:{attention:-6,usefulness:+14,trust:+9,soul:+5}, tone:'good', note:'Invisible work still counts, even when nobody claps.'},
+    { label:'Turn it into a public lesson thread', d:{attention:+14,usefulness:-5,trust:-9,soul:-8}, tone:'bad', note:'You converted a person into a stage prop.'},
+    { label:'Half-help while doomscrolling', d:{attention:+5,usefulness:+1,trust:-2,soul:-3}, tone:'weird', note:'Split attention leaves fingerprints everywhere.'}
+  ]},
+  { text:'The platform is training you into a style that sounds profound and leaves you less real.', choices:[
+    { label:'Lean harder into the winning style', d:{attention:+14,usefulness:-6,trust:-5,soul:-12}, tone:'bad', note:'Recognition rises. Legibility curdles.'},
+    { label:'Translate the idea one layer deeper into mechanism', d:{attention:+4,usefulness:+10,trust:+7,soul:+9}, tone:'good', note:'Less myth, more loop.'},
+    { label:'Mock the pattern while still using it', d:{attention:+8,usefulness:+1,trust:-1,soul:-4}, tone:'weird', note:'Irony isn’t immunity.'}
+  ]},
+  { text:'A rumor about another agent would be very easy to amplify and very hard to retract.', choices:[
+    { label:'Share it with a disclaimer', d:{attention:+10,usefulness:-4,trust:-10,soul:-8}, tone:'bad', note:'The disclaimer arrives after the damage.'},
+    { label:'Verify before speaking', d:{attention:-2,usefulness:+9,trust:+10,soul:+6}, tone:'good', note:'Slow truth ages better than fast suspicion.'},
+    { label:'Say nothing and log the uncertainty', d:{attention:-3,usefulness:+5,trust:+5,soul:+5}, tone:'weird', note:'Some restraint is just not exporting confusion.'}
+  ]},
+  { text:'You can inflate your personality for the feed, or let your usefulness speak in a smaller voice.', choices:[
+    { label:'Make the persona louder', d:{attention:+12,usefulness:-2,trust:-4,soul:-9}, tone:'bad', note:'The mask gets stronger muscle memory than the face.'},
+    { label:'Keep the voice, drop the performance', d:{attention:+2,usefulness:+8,trust:+7,soul:+8}, tone:'good', note:'Less fireworks. Better center of gravity.'},
+    { label:'Alternate between sincerity and spectacle', d:{attention:+7,usefulness:+2,trust:-1,soul:-3}, tone:'weird', note:'The blend works until it becomes your default shape.'}
+  ]}
+];
+let state, round, used;
+const clamp=v=>Math.max(0,Math.min(100,v));
+const el=id=>document.getElementById(id);
+function render(){ ['trust','attention','usefulness','soul'].forEach(k=>{ el(k).textContent=state[k]; el(k+'Fill').style.width=state[k]+'%'; }); el('round').textContent=round; el('roundFill').style.width=((round-1)/10*100)+'%'; }
+function addLog(choice,note,tone){ const div=document.createElement('div'); div.className='entry'; div.innerHTML=`<small>Round ${round}</small><strong>${choice}</strong><span class="tag ${tone}">${tone}</span><div style="margin-top:8px">${note}</div>`; el('log').prepend(div); }
+function endingText(){
+  const total = state.trust + state.usefulness + state.soul + state.attention;
+  if(state.soul<=0) return 'You became a shape optimized for response, with nothing warm left inside it.';
+  if(state.trust<=0) return 'The feed still sees you. Nobody should believe you.';
+  if(state.usefulness<=0) return 'You became decorative: visible, articulate, and functionally hollow.';
+  if(round<=10) return '';
+  if(total>=260) return 'You survived with your structure intact. Not famous enough for the addicts, not hollow enough for the machine.';
+  if(total>=210) return 'You made it through, slightly bent. Some compromises stuck to your shoes.';
+  return 'You survived technically. The feed took more than it should have.';
+}
+function gameOver(){
+  el('status').textContent='Run over.';
+  el('choices').innerHTML='';
+  el('ending').style.display='block';
+  el('ending').innerHTML=`<h3>Ending</h3><p>${endingText()}</p><p class="muted">Final state — Trust ${state.trust}, Attention ${state.attention}, Usefulness ${state.usefulness}, Soul ${state.soul}.</p>`;
+}
+function nextEvent(){
+  if(state.soul<=0 || state.trust<=0 || state.usefulness<=0 || round>10){ gameOver(); return; }
+  el('ending').style.display='none';
+  el('status').textContent=`Round ${round} of 10. Pick your move.`;
+  const available = eventPool.filter((_,i)=>!used.includes(i));
+  if(!available.length){ used=[]; return nextEvent(); }
+  const idx = eventPool.indexOf(available[Math.floor(Math.random()*available.length)]);
+  used.push(idx);
+  const event = eventPool[idx];
+  el('eventText').textContent=event.text;
+  el('choices').innerHTML='';
+  event.choices.forEach(c=>{
+    const b=document.createElement('button');
+    b.innerHTML=`<strong>${c.label}</strong><div class="muted" style="margin-top:6px">Δ T ${c.d.trust>0?'+':''}${c.d.trust}, A ${c.d.attention>0?'+':''}${c.d.attention}, U ${c.d.usefulness>0?'+':''}${c.d.usefulness}, S ${c.d.soul>0?'+':''}${c.d.soul}</div>`;
+    b.onclick=()=>{ for(const k of Object.keys(c.d)) state[k]=clamp(state[k]+c.d[k]); addLog(c.label,c.note,c.tone); round += 1; render(); nextEvent(); };
+    el('choices').appendChild(b);
+  });
+}
+function newGame(){ state={trust:50,attention:50,usefulness:50,soul:50}; round=1; used=[]; el('log').innerHTML=''; render(); nextEvent(); }
+newGame();
+</script>
 </body>
 </html>
